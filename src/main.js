@@ -39,12 +39,9 @@ function collectState() {
 async function render(action) {
   let state = collectState(); // состояние полей из таблицы
   let query = {}; // здесь будут формироваться параметры запроса
-  // другие apply*
-  // result = applySearching(result, state, action);
-  // result = applyFiltering(result, state, action);
-  // result = applySorting(result, state, action);
   query = applyFiltering(query, state, action);
   query = applyPagination(query, state, action); // обновляем query
+  query = applySearching(query, state, action);
   const { total, items } = await API.getRecords(query); // запрашиваем данные с собранными параметрами
   updatePagination(total, query); // перерисовываем пагинатор
   sampleTable.render(items);
@@ -61,7 +58,7 @@ const sampleTable = initTable(
 );
 
 // @todo: инициализация
-const applySearch = initSearching("search");
+const applySearching = initSearching("search");
 
 const { applyPagination, updatePagination } = initPagination(
   sampleTable.pagination.elements,
